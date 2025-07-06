@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Age Calculator</title>
+    
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .container {
+            background: rgba(255,255,255,0.95);
+            padding: 36px 44px 32px 44px;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            text-align: center;
+            width: 340px;
+        }
+        h2 {
+            margin-bottom: 18px;
+            font-size: 2em;
+            letter-spacing: 1px;
+            color: #0078d7;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            align-items: center;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        label {
+            font-size: 1em;
+            color: #555;
+        }
+        input[type="number"] {
+            width: 60px;
+            padding: 7px 8px;
+            border: 1.5px solid #bdbdbd;
+            border-radius: 6px;
+            font-size: 1em;
+            background: #f8fafc;
+            transition: border 0.2s;
+        }
+        input[type="number"]:focus {
+            border: 1.5px solid #0078d7;
+            outline: none;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 0;
+            width: 100%;
+            background: linear-gradient(90deg, #0078d7 60%, #00c6fb 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,120,215,0.08);
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #005fa3 60%, #00a2c7 100%);
+        }
+        .result {
+            margin-top: 22px;
+            font-size: 1.15em;
+            color: #333;
+            min-height: 1.5em;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Age Calculator</h2>
+        <form id="ageForm" autocomplete="off">
+            <div class="input-group">
+                <label for="day">Day</label>
+                <input type="number" id="day" min="1" max="31" required>
+                <label for="month">Month</label>
+                <input type="number" id="month" min="1" max="12" required>
+                <label for="year">Year</label>
+                <input type="number" id="year" min="1900" max="2100" required>
+            </div>
+            <button type="submit">Calculate Age</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+    <script>
+        // Array of image URLs (replace with your own server image URLs)
+        const bgImages = [
+            "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=1200&q=80",
+            "https://images.unsplash.com/photo-1465101178521-c1a9136a3b99?auto=format&fit=crop&w=1200&q=80"
+        ];
+
+        function setRandomBgImage() {
+            const img = bgImages[Math.floor(Math.random() * bgImages.length)];
+            document.body.style.backgroundImage = `linear-gradient(135deg, #a8edea 0%, #fed6e3 100%), url('${img}')`;
+            document.body.style.backgroundSize = "cover";
+            document.body.style.backgroundRepeat = "no-repeat";
+            document.body.style.backgroundPosition = "center";
+            document.body.style.backgroundBlendMode = "overlay";
+        }
+
+        setRandomBgImage();
+        setInterval(setRandomBgImage, 4000); // Change image every 4 seconds
+    </script>
+    <script>
+        document.getElementById('ageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const day = parseInt(document.getElementById('day').value, 10);
+            const month = parseInt(document.getElementById('month').value, 10);
+            const year = parseInt(document.getElementById('year').value, 10);
+
+            const dob = new Date(year, month - 1, day);
+            const today = new Date();
+
+            if (dob > today || isNaN(dob.getTime())) {
+                document.getElementById('result').textContent = "Please enter a valid date of birth.";
+                return;
+            }
+
+            let years = today.getFullYear() - dob.getFullYear();
+            let months = today.getMonth() - dob.getMonth();
+            let days = today.getDate() - dob.getDate();
+
+            if (days < 0) {
+                months--;
+                const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            document.getElementById('result').textContent =
+                `🎉 You are ${years} year(s), ${months} month(s), and ${days} day(s) old.`;
+        });
+    </script>
+</body>
+</html>
